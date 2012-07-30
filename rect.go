@@ -1,7 +1,6 @@
 package sdl
 
 import (
-	"reflect"
 	"unsafe"
 )
 
@@ -57,11 +56,9 @@ func (r *Rect) UnionRect(r2 *Rect) *Rect {
 }
 
 func EnclosePoints(points []Point, clip *Rect) (*Rect, bool) {
-	h := (*reflect.SliceHeader)(unsafe.Pointer(&points))
-
 	var rect Rect
 	return &rect, C.SDL_EnclosePoints(
-		(*C.SDL_Point)(unsafe.Pointer(h.Data)),
+		(*C.SDL_Point)(unsafe.Pointer(&points[0])),
 		C.int(len(points)),
 		clip.c(),
 		rect.c(),

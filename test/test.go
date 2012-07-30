@@ -28,7 +28,21 @@ func main() {
 			panic(err)
 		}
 		fmt.Printf("\t%v\n", rect)
+
+		nm, err := sdl.GetNumDisplayModes(i)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("\tModes: %v\n", nm)
+		for m := 0; m < nm; m++ {
+			dm, err := sdl.GetDisplayMode(i, m)
+			if err != nil {
+				panic(err)
+			}
+			fmt.Printf("\t\t%v\n", dm)
+		}
 	}
+	fmt.Println()
 
 	win, err := sdl.CreateWindow(
 		"Test",
