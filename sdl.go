@@ -1,9 +1,5 @@
 package sdl
 
-import (
-	"errors"
-)
-
 // #cgo pkg-config: sdl2
 //
 // #include <SDL.h>
@@ -19,21 +15,28 @@ const (
 	INIT_EVERYTHING  = 0x0000FFFF
 )
 
-func getError() error {
-	err := C.GoString(C.SDL_GetError())
-	if len(err) == 0 {
-		panic("Blank error.")
-	}
-
-	return errors.New(err)
-}
-
 func Init(flags uint32) error {
 	if C.SDL_Init(C.Uint32(flags)) != 0 {
 		return getError()
 	}
 
 	return nil
+}
+
+func InitSubSystem(flags uint32) error {
+	if C.SDL_InitSubSystem(C.Uint32(flags)) != 0 {
+		return getError()
+	}
+
+	return nil
+}
+
+func QuitSubSystem(flags uint32) {
+	C.SDL_QuitSubSystem(C.Uint32(flags))
+}
+
+func WasInit(flags uint32) uint32 {
+	return uint32(C.SDL_WasInit(C.Uint32(flags)))
 }
 
 func Quit() {
