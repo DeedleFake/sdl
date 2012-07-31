@@ -8,11 +8,7 @@ import (
 //
 // #include <SDL.h>
 //
-// static SDL_Surface *LoadBMP(const char *file) { return SDL_LoadBMP(file); }
-// static int SaveBMP(SDL_Surface *s, const char *file) { return SDL_SaveBMP(s, file); }
-//
-// static int BlitSurface(SDL_Surface *src, const SDL_Rect *sr, SDL_Surface *dst, SDL_Rect *dr) { return SDL_BlitSurface(src, sr, dst, dr); }
-// static int BlitScaled(SDL_Surface *src, const SDL_Rect *sr, SDL_Surface *dst, SDL_Rect *dr) { return SDL_BlitScaled(src, sr, dst, dr); }
+// #include "surface.h"
 import "C"
 
 const (
@@ -113,12 +109,12 @@ func LoadBMP_RW(rw *RWops, free bool) (*Surface, error) {
 		cfree = 1
 	}
 
-	s := C.SDL_LoadBMP_RW(rw.c(), cfree)
+	s := C.SDL_LoadBMP_RW(rw.c, cfree)
 	if s == nil {
 		return nil, getError()
 	}
 
-	return nil
+	return (*Surface)(unsafe.Pointer(s)), nil
 }
 
 func LoadBMP(file string) (*Surface, error) {
@@ -130,7 +126,7 @@ func LoadBMP(file string) (*Surface, error) {
 		return nil, getError()
 	}
 
-	return nil
+	return (*Surface)(unsafe.Pointer(s)), nil
 }
 
 func (s *Surface) SaveBMP_RW(rw *RWops, free bool) error {
@@ -139,7 +135,7 @@ func (s *Surface) SaveBMP_RW(rw *RWops, free bool) error {
 		cfree = 1
 	}
 
-	if C.SDL_SaveBMP_RW(s.c(), rw.c(), cfree) != 0 {
+	if C.SDL_SaveBMP_RW(s.c(), rw.c, cfree) != 0 {
 		return getError()
 	}
 
@@ -250,6 +246,8 @@ func (s *Surface) SetClipRect(r *Rect) bool {
 func (s *Surface) GetClipRect() *Rect {
 	var rect Rect
 	C.SDL_GetClipRect(s.c(), rect.c())
+
+	return &rect
 }
 
 func (s *Surface) Convert(f *PixelFormat, flags uint32) (*Surface, error) {

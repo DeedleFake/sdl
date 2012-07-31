@@ -1,7 +1,6 @@
 package sdl
 
 import (
-	"errors"
 	"reflect"
 	"unsafe"
 )
@@ -270,9 +269,9 @@ func (p *PixelFormat) GetRGBA(pix uint32) (r, g, b, a uint8) {
 	return uint8(cr), uint8(cg), uint8(cb), uint8(ca)
 }
 
-func CalculateGammaRamp(gamma float32, ramp []uint16) error {
+func CalculateGammaRamp(gamma float32, ramp []uint16) {
 	if len(ramp) < 256 {
-		return errors.New("len(ramp) must be > 256")
+		panic("len(ramp) must be > 256")
 	}
 
 	C.SDL_CalculateGammaRamp(C.float(gamma), (*C.Uint16)(&ramp[0]))

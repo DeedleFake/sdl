@@ -546,6 +546,8 @@ func GL_SetSwapInterval(vsync bool) error {
 	if C.SDL_GL_SetSwapInterval(interval) != 0 {
 		return getError()
 	}
+
+	return nil
 }
 
 func GL_GetSwapInterval() (bool, error) {
