@@ -12,10 +12,10 @@ package sdl
 import "C"
 
 const (
-	SWSURFACE = 0
-	PREALLOC  = 0x00000001
-	RLEACCEL  = 0x00000002
-	DONTFREE  = 0x00000004
+	SWSURFACE = C.SDL_SWSURFACE
+	PREALLOC  = C.SDL_PREALLOC
+	RLEACCEL  = C.SDL_RLEACCEL
+	DONTFREE  = C.SDL_DONTFREE
 )
 
 func (s *Surface) MustLock() bool {
@@ -34,7 +34,7 @@ type Surface struct {
 	Locked   int32
 	LockData uintptr
 
-	blitmap *BlitMap
+	blitmap uintptr
 
 	Refcount int32
 }
