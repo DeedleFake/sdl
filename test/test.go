@@ -3,6 +3,8 @@ package main
 import (
 	".."
 	"fmt"
+	"os"
+	"time"
 )
 
 func main() {
@@ -56,4 +58,40 @@ func main() {
 		panic(err)
 	}
 	defer win.Destroy()
+
+	file, err := os.Open("test.bmp")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	rw := sdl.RWFromReadSeeker(file)
+	bmp, err := sdl.LoadBMP_RW(rw, true)
+	if err != nil {
+		panic(err)
+	}
+	defer bmp.Free()
+
+	//bmp, err := sdl.LoadBMP("test.bmp")
+	//if err != nil {
+	//	panic(err)
+	//}
+	//defer bmp.Free()
+
+	ws, err := win.GetSurface()
+	if err != nil {
+		panic(err)
+	}
+
+	err = ws.Blit(nil, bmp, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	err = win.UpdateSurface()
+	if err != nil {
+		panic(err)
+	}
+
+	time.Sleep(3 * time.Second)
 }
