@@ -1,5 +1,9 @@
 package sdl
 
+import (
+	"unsafe"
+)
+
 // #cgo pkg-config: sdl2
 //
 // #include <SDL.h>
@@ -185,7 +189,7 @@ func (s *Surface) GetColorKey() (uint32, error) {
 		return 0, getError()
 	}
 
-	return key, nil
+	return uint32(key), nil
 }
 
 func (s *Surface) SetColorMod(r, g, b uint8) error {
@@ -198,7 +202,7 @@ func (s *Surface) SetColorMod(r, g, b uint8) error {
 
 func (s *Surface) GetColorMod() (r, g, b uint8, err error) {
 	var cr, cg, cb C.Uint8
-	if C.SDL_GetSurfaceColorMod(s.c, &cr, &cg, &cb) != 0 {
+	if C.SDL_GetSurfaceColorMod(s.c(), &cr, &cg, &cb) != 0 {
 		return 0, 0, 0, getError()
 	}
 
