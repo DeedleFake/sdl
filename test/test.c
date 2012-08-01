@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 
 	SDL_Surface *ws = SDL_GetWindowSurface(win);
 
+	SDL_FillRect(ws, NULL, 100000);
 	SDL_BlitSurface(ws, NULL, bmp, NULL);
 
 	SDL_UpdateWindowSurface(win);

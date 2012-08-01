@@ -83,6 +83,8 @@ func main() {
 		panic(err)
 	}
 
+	ws.FillRect(nil, 100000)
+
 	err = ws.Blit(nil, bmp, nil)
 	if err != nil {
 		panic(err)
