@@ -1,4 +1,17 @@
+// +build ignore
+
 #include <SDL.h>
+
+SDL_Texture *LoadTexture(SDL_Renderer *ren, const char *file)
+{
+	SDL_Surface *bmp = SDL_LoadBMP("test.bmp");
+
+	SDL_Texture *tex = SDL_CreateTextureFromSurface(ren, bmp);
+
+	SDL_FreeSurface(bmp);
+
+	return tex;
+}
 
 int main(int argc, char *argv[])
 {
@@ -13,14 +26,15 @@ int main(int argc, char *argv[])
 			SDL_WINDOW_SHOWN
 	);
 
-	SDL_Surface *bmp = SDL_LoadBMP("test.bmp");
+	SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 
-	SDL_Surface *ws = SDL_GetWindowSurface(win);
+	SDL_Texture *bmp = LoadTexture(ren, "test.bmp");
 
-	SDL_FillRect(ws, NULL, 100000);
-	SDL_BlitSurface(ws, NULL, bmp, NULL);
-
-	SDL_UpdateWindowSurface(win);
+	SDL_RenderClear(ren);
+	SDL_RenderCopy(ren, bmp, NULL, NULL);
+	SDL_RenderPresent(ren);
 
 	SDL_Delay(3000);
+
+	return 0;
 }

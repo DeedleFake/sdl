@@ -3,9 +3,26 @@ package main
 import (
 	".."
 	"fmt"
+	"io"
 	"os"
 	"time"
 )
+
+func LoadTexture(ren *sdl.Renderer, r io.ReadSeeker) (*sdl.Texture, error) {
+	rw := sdl.RWFromReadSeeker(r)
+	bmp, err := sdl.LoadBMP_RW(rw, true)
+	if err != nil {
+		return nil, err
+	}
+	defer bmp.Free()
+
+	bmpT, err := ren.CreateTextureFromSurface(bmp)
+	if err != nil {
+		return nil, err
+	}
+
+	return bmpT, nil
+}
 
 func main() {
 	err := sdl.Init(sdl.INIT_EVERYTHING)
@@ -59,41 +76,27 @@ func main() {
 	}
 	defer win.Destroy()
 
+	ren, err := win.CreateRenderer(-1, sdl.RENDERER_ACCELERATED)
+	if err != nil {
+		panic(err)
+	}
+	defer ren.Destroy()
+
 	file, err := os.Open("test.bmp")
 	if err != nil {
 		panic(err)
 	}
 	defer file.Close()
 
-	rw := sdl.RWFromReadSeeker(file)
-	bmp, err := sdl.LoadBMP_RW(rw, true)
+	bmp, err := LoadTexture(ren, file)
 	if err != nil {
 		panic(err)
 	}
-	defer bmp.Free()
+	defer bmp.Destroy()
 
-	//bmp, err := sdl.LoadBMP("test.bmp")
-	//if err != nil {
-	//	panic(err)
-	//}
-	//defer bmp.Free()
-
-	ws, err := win.GetSurface()
-	if err != nil {
-		panic(err)
-	}
-
-	ws.FillRect(nil, 100000)
-
-	err = ws.Blit(nil, bmp, nil)
-	if err != nil {
-		panic(err)
-	}
-
-	err = win.UpdateSurface()
-	if err != nil {
-		panic(err)
-	}
+	ren.Clear()
+	ren.Copy(bmp, nil, nil)
+	ren.Present()
 
 	time.Sleep(3 * time.Second)
 }
