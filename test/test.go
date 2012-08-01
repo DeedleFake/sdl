@@ -81,6 +81,7 @@ func main() {
 		panic(err)
 	}
 	defer ren.Destroy()
+	ren.SetDrawColor(100, 100, 255, sdl.ALPHA_OPAQUE)
 
 	file, err := os.Open("test.bmp")
 	if err != nil {
@@ -94,9 +95,28 @@ func main() {
 	}
 	defer bmp.Destroy()
 
-	ren.Clear()
-	ren.Copy(bmp, nil, nil)
-	ren.Present()
+	var rot float64
 
-	time.Sleep(3 * time.Second)
+	end := time.After(3 * time.Second)
+
+	fps := time.Tick(time.Second / 60)
+	for fps != nil {
+		select {
+		case <-end:
+			fps = nil
+		default:
+		}
+
+		rot += .1
+
+		ren.Clear()
+
+		ren.CopyEx(bmp, nil, &sdl.Rect{100, 100, 300, 300}, rot, nil, sdl.FLIP_NONE)
+
+		ren.Present()
+
+		if fps != nil {
+			<-fps
+		}
+	}
 }
