@@ -5,7 +5,7 @@ package sdl
 // #include <SDL.h>
 import "C"
 
-type BlendMode uint32
+type BlendMode C.SDL_BlendMode
 
 func (m BlendMode) c() C.SDL_BlendMode {
 	return C.SDL_BlendMode(m)
