@@ -1,5 +1,10 @@
 package sdl
 
+import (
+	"reflect"
+	"unsafe"
+)
+
 // #cgo pkg-config: sdl2
 //
 // #include <SDL.h>

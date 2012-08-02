@@ -1,6 +1,9 @@
 package sdl
 
 import (
+	"math"
+	"strconv"
+	"sync"
 	"time"
 	"unsafe"
 )
@@ -12,7 +15,7 @@ import (
 // #include "events.h"
 import "C"
 
-type EventType C.SDL_EventType
+type EventType uint32
 
 const (
 	FIRSTEVENT EventType = C.SDL_FIRSTEVENT
@@ -65,7 +68,7 @@ const (
 )
 
 type WindowEvent struct {
-	Type                         uint32
+	Type                         EventType
 	Timestamp                    uint32
 	WindowID                     uint32
 	Event                        uint8
@@ -77,12 +80,12 @@ func (ev *WindowEvent) c() *C.SDL_WindowEvent {
 	return (*C.SDL_WindowEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *WindowEvent) sdlEvent() cEvent {
+func (ev *WindowEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type KeyboardEvent struct {
-	Type               uint32
+	Type               EventType
 	Timestamp          uint32
 	WindowID           uint32
 	State              uint8
@@ -95,14 +98,14 @@ func (ev *KeyboardEvent) c() *C.SDL_KeyboardEvent {
 	return (*C.SDL_KeyboardEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *KeyboardEvent) sdlEvent() cEvent {
+func (ev *KeyboardEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 const TEXTEDITINGEVENT_TEXT_SIZE = C.SDL_TEXTEDITINGEVENT_TEXT_SIZE
 
 type TextEditingEvent struct {
-	Type      uint32
+	Type      EventType
 	Timestamp uint32
 	WindowID  uint32
 	Text      [TEXTEDITINGEVENT_TEXT_SIZE]byte
@@ -114,14 +117,14 @@ func (ev *TextEditingEvent) c() *C.SDL_TextEditingEvent {
 	return (*C.SDL_TextEditingEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *TextEditingEvent) sdlEvent() cEvent {
+func (ev *TextEditingEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 const TEXTINPUTEVENT_TEXT_SIZE = C.SDL_TEXTINPUTEVENT_TEXT_SIZE
 
 type TextInputEvent struct {
-	Type      uint32
+	Type      EventType
 	Timestamp uint32
 	WindowID  uint32
 	Text      [TEXTINPUTEVENT_TEXT_SIZE]byte
@@ -131,12 +134,12 @@ func (ev *TextInputEvent) c() *C.SDL_TextInputEvent {
 	return (*C.SDL_TextInputEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *TextInputEvent) sdlEvent() cEvent {
+func (ev *TextInputEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type MouseMotionEvent struct {
-	Type                         uint32
+	Type                         EventType
 	Timestamp                    uint32
 	WindowID                     uint32
 	State                        uint8
@@ -149,12 +152,12 @@ func (ev *MouseMotionEvent) c() *C.SDL_MouseMotionEvent {
 	return (*C.SDL_MouseMotionEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *MouseMotionEvent) sdlEvent() cEvent {
+func (ev *MouseMotionEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type MouseButtonEvent struct {
-	Type               uint32
+	Type               EventType
 	Timestamp          uint32
 	WindowID           uint32
 	Button             uint8
@@ -167,12 +170,12 @@ func (ev *MouseButtonEvent) c() *C.SDL_MouseButtonEvent {
 	return (*C.SDL_MouseButtonEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *MouseButtonEvent) sdlEvent() cEvent {
+func (ev *MouseButtonEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type MouseWheelEvent struct {
-	Type      uint32
+	Type      EventType
 	Timestamp uint32
 	WindowID  uint32
 	X, Y      int32
@@ -182,12 +185,12 @@ func (ev *MouseWheelEvent) c() *C.SDL_MouseWheelEvent {
 	return (*C.SDL_MouseWheelEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *MouseWheelEvent) sdlEvent() cEvent {
+func (ev *MouseWheelEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type JoyAxisEvent struct {
-	Type               uint32
+	Type               EventType
 	Timestamp          uint32
 	Which              uint8
 	Axis               uint8
@@ -199,12 +202,12 @@ func (ev *JoyAxisEvent) c() *C.SDL_JoyAxisEvent {
 	return (*C.SDL_JoyAxisEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *JoyAxisEvent) sdlEvent() cEvent {
+func (ev *JoyAxisEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type JoyBallEvent struct {
-	Type               uint32
+	Type               EventType
 	Timestamp          uint32
 	Which              uint8
 	Ball               uint8
@@ -216,12 +219,12 @@ func (ev *JoyBallEvent) c() *C.SDL_JoyBallEvent {
 	return (*C.SDL_JoyBallEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *JoyBallEvent) sdlEvent() cEvent {
+func (ev *JoyBallEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type JoyHatEvent struct {
-	Type      uint32
+	Type      EventType
 	Timestamp uint32
 	Which     uint8
 	Hat       uint8
@@ -233,12 +236,12 @@ func (ev *JoyHatEvent) c() *C.SDL_JoyHatEvent {
 	return (*C.SDL_JoyHatEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *JoyHatEvent) sdlEvent() cEvent {
+func (ev *JoyHatEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type JoyButtonEvent struct {
-	Type      uint32
+	Type      EventType
 	Timestamp uint32
 	Which     uint8
 	Hat       uint8
@@ -250,12 +253,12 @@ func (ev *JoyButtonEvent) c() *C.SDL_JoyButtonEvent {
 	return (*C.SDL_JoyButtonEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *JoyButtonEvent) sdlEvent() cEvent {
+func (ev *JoyButtonEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type TouchFingerEvent struct {
-	Type                         uint32
+	Type                         EventType
 	Timestamp                    uint32
 	WindowID                     uint32
 	TouchId                      TouchID
@@ -271,12 +274,12 @@ func (ev *TouchFingerEvent) c() *C.SDL_TouchFingerEvent {
 	return (*C.SDL_TouchFingerEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *TouchFingerEvent) sdlEvent() cEvent {
+func (ev *TouchFingerEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type TouchButtonEvent struct {
-	Type               uint32
+	Type               EventType
 	Timestamp          uint32
 	WindowID           uint32
 	TouchId            TouchID
@@ -289,12 +292,12 @@ func (ev *TouchButtonEvent) c() *C.SDL_TouchButtonEvent {
 	return (*C.SDL_TouchButtonEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *TouchButtonEvent) sdlEvent() cEvent {
+func (ev *TouchButtonEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type MultiGestureEvent struct {
-	Type       uint32
+	Type       EventType
 	Timestamp  uint32
 	WindowID   uint32
 	TouchId    TouchID
@@ -309,12 +312,12 @@ func (ev *MultiGestureEvent) c() *C.SDL_MultiGestureEvent {
 	return (*C.SDL_MultiGestureEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *MultiGestureEvent) sdlEvent() cEvent {
+func (ev *MultiGestureEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type DollarGestureEvent struct {
-	Type       uint32
+	Type       EventType
 	Timestamp  uint32
 	WindowID   uint32
 	TouchId    TouchID
@@ -327,12 +330,12 @@ func (ev *DollarGestureEvent) c() *C.SDL_DollarGestureEvent {
 	return (*C.SDL_DollarGestureEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *DollarGestureEvent) sdlEvent() cEvent {
+func (ev *DollarGestureEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type DropEvent struct {
-	Type      uint32
+	Type      EventType
 	Timestamp uint32
 	file      *C.char
 }
@@ -341,7 +344,7 @@ func (ev *DropEvent) c() *C.SDL_DropEvent {
 	return (*C.SDL_DropEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *DropEvent) sdlEvent() cEvent {
+func (ev *DropEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
@@ -350,7 +353,7 @@ func (ev *DropEvent) File() string {
 }
 
 type QuitEvent struct {
-	Type      uint32
+	Type      EventType
 	Timestamp uint32
 }
 
@@ -358,12 +361,12 @@ func (ev *QuitEvent) c() *C.SDL_QuitEvent {
 	return (*C.SDL_QuitEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *QuitEvent) sdlEvent() cEvent {
+func (ev *QuitEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type UserEvent struct {
-	Type      uint32
+	Type      EventType
 	Timestamp uint32
 	WindowID  uint32
 	Code      int32
@@ -375,14 +378,14 @@ func (ev *UserEvent) c() *C.SDL_UserEvent {
 	return (*C.SDL_UserEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *UserEvent) sdlEvent() cEvent {
+func (ev *UserEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
 type SysWMmsg C.SDL_SysWMmsg
 
 type SysWMEvent struct {
-	Type      uint32
+	Type      EventType
 	Timestamp uint32
 	Msg       *SysWMmsg
 }
@@ -391,7 +394,7 @@ func (ev *SysWMEvent) c() *C.SDL_SysWMEvent {
 	return (*C.SDL_SysWMEvent)(unsafe.Pointer(ev))
 }
 
-func (ev *SysWMEvent) sdlEvent() cEvent {
+func (ev *SysWMEvent) sdlEvent() *cEvent {
 	return (*cEvent)(unsafe.Pointer(ev))
 }
 
@@ -401,8 +404,12 @@ func (ev *cEvent) c() *C.SDL_Event {
 	return (*C.SDL_Event)(unsafe.Pointer(ev))
 }
 
+func (ev *cEvent) getType() EventType {
+	return *(*EventType)(unsafe.Pointer(ev))
+}
+
 func (ev *cEvent) toGo() Event {
-	switch ev.Type {
+	switch ev.getType() {
 	case QUIT:
 		return (*QuitEvent)(unsafe.Pointer(ev))
 	case WINDOWEVENT:
@@ -430,7 +437,7 @@ func (ev *cEvent) toGo() Event {
 	case JOYBUTTONDOWN, JOYBUTTONUP:
 		return (*JoyButtonEvent)(unsafe.Pointer(ev))
 	case FINGERDOWN, FINGERUP, FINGERMOTION:
-		return (*FingerEvent)(unsafe.Pointer(ev))
+		return (*TouchFingerEvent)(unsafe.Pointer(ev))
 	case TOUCHBUTTONDOWN, TOUCHBUTTONUP:
 		return (*TouchButtonEvent)(unsafe.Pointer(ev))
 	case DOLLARGESTURE:
@@ -438,16 +445,16 @@ func (ev *cEvent) toGo() Event {
 	case MULTIGESTURE:
 		return (*MultiGestureEvent)(unsafe.Pointer(ev))
 	case DROPFILE:
-		return (*DropFileEvent)(unsafe.Pointer(ev))
+		return (*DropEvent)(unsafe.Pointer(ev))
 	case USEREVENT:
 		return (*UserEvent)(unsafe.Pointer(ev))
 	}
 
-	panic("Can't convert event type: " + strconv.FormatUint(ev, 16))
+	panic("Can't convert event type: " + strconv.FormatUint(uint64(ev.getType()), 16))
 }
 
 type Event interface {
-	sdlEvent() cEvent
+	sdlEvent() *cEvent
 }
 
 func PumpEvents() {
@@ -490,6 +497,8 @@ func HasEvents(min, max uint32) bool {
 	return C.SDL_HasEvents(C.Uint32(min), C.Uint32(max)) == C.SDL_TRUE
 }
 
+// TODO: Find a way to make this more multi-threading friendly.
+
 var (
 	evCache cEvent
 	evLock  sync.Mutex
@@ -499,7 +508,7 @@ func PollEvent(ev *Event) bool {
 	evLock.Lock()
 	defer evLock.Unlock()
 
-	if C.SDL_PollEvent(&evCache) == 0 {
+	if C.SDL_PollEvent(evCache.c()) == 0 {
 		return false
 	}
 
@@ -512,7 +521,7 @@ func WaitEvent(ev *Event) error {
 	evLock.Lock()
 	defer evLock.Unlock()
 
-	if C.SDL_WaitEvent(&evCache) == 0 {
+	if C.SDL_WaitEvent(evCache.c()) == 0 {
 		return getError()
 	}
 
@@ -525,7 +534,7 @@ func WaitEventTimeout(ev *Event, timeout time.Duration) error {
 	evLock.Lock()
 	defer evLock.Unlock()
 
-	if C.SDL_WaitEventTimeout(&evCache, C.int(timeout/time.Millisecond)) == 0 {
+	if C.SDL_WaitEventTimeout(evCache.c(), C.int(timeout/time.Millisecond)) == 0 {
 		return getError()
 	}
 
@@ -551,7 +560,7 @@ type eventFilterCtx struct {
 }
 
 //export eventFilter
-func eventFilter(data unsafe.Pointer, ev *C.SDL_Event) C.int {
+func eventFilter(data unsafe.Pointer, ev *cEvent) C.int {
 	ctx := (*eventFilterCtx)(data)
 	r := ctx.f(ctx.d, ev.toGo())
 
@@ -592,14 +601,15 @@ func AddEventWatch(filter EventFilter, data interface{}) {
 	C.AddEventWatch(unsafe.Pointer(ctx))
 }
 
-func DelEventWatch(filter EventFilter, data interface{}) {
-	ctx := &eventFilterCtx{
-		f: filter,
-		d: data,
-	}
-
-	C.SDL_DelEventWatch(eventFilter, ctx)
-}
+// TODO: Find a way to make this work.
+//func DelEventWatch(filter EventFilter, data interface{}) {
+//	ctx := &eventFilterCtx{
+//		f: filter,
+//		d: data,
+//	}
+//
+//	C.DelEventWatch(unsafe.Pointer(&eventFilter), ctx)
+//}
 
 func FilterEvents(filter EventFilter, data unsafe.Pointer) {
 	ctx := &eventFilterCtx{
@@ -607,7 +617,7 @@ func FilterEvents(filter EventFilter, data unsafe.Pointer) {
 		d: data,
 	}
 
-	C.FilterEvents(ctx)
+	C.FilterEvents(unsafe.Pointer(ctx))
 }
 
 const (
@@ -631,5 +641,5 @@ func RegisterEvents(num int) (uint32, error) {
 		return 0, getError()
 	}
 
-	return n, nil
+	return uint32(n), nil
 }

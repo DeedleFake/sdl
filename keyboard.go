@@ -1,6 +1,7 @@
 package sdl
 
 import (
+	"reflect"
 	"unsafe"
 )
 
