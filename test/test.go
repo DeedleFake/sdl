@@ -96,22 +96,51 @@ func main() {
 	defer bmp.Destroy()
 
 	var rot float64
+	var x, y int
 
-	end := time.After(3 * time.Second)
+	input := make(map[sdl.Keycode]bool)
 
 	fps := time.Tick(time.Second / 60)
 	for fps != nil {
-		select {
-		case <-end:
-			fps = nil
-		default:
+		var ev sdl.Event
+		for sdl.PollEvent(&ev) {
+			switch ev := ev.(type) {
+			case *sdl.KeyboardEvent:
+				if ev.Type == sdl.KEYDOWN {
+					input[ev.Keysym.Sym] = true
+				} else {
+					input[ev.Keysym.Sym] = false
+				}
+			case *sdl.QuitEvent:
+				fps = nil
+			}
+		}
+
+		if input[sdl.K_UP] {
+			y--
+		}
+		if input[sdl.K_DOWN] {
+			y++
+		}
+		if input[sdl.K_LEFT] {
+			x--
+		}
+		if input[sdl.K_RIGHT] {
+			x++
 		}
 
 		rot += .1
 
 		ren.Clear()
 
-		ren.CopyEx(bmp, nil, &sdl.Rect{100, 100, 300, 300}, rot, nil, sdl.FLIP_NONE)
+		ren.CopyEx(
+			bmp,
+			nil,
+			&sdl.Rect{int32(x), int32(y), 300, 300},
+			rot,
+			nil,
+			sdl.FLIP_NONE,
+		)
 
 		ren.Present()
 
