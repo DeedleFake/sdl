@@ -1,7 +1,7 @@
 Go Bindings for SDL 2
 =====================
 
-This [Go][golang] package provides bindings for [SDL][sdl] 2. It mostly follows the same API, but substitutes the 'SDL\_' prefix in the C definitions with the sdl package prefix. Thus, the C function
+This [Go][golang] package provides bindings for [SDL][sdl] 2. For bindings for [SDL][sdl] 1 see [banthar's GitHub repo][Go-SDL]. It mostly follows the C API, but removes the 'SDL\_' prefix in the C definitions. Thus, the C function
 
 > SDL\_CreateWindow()
 
@@ -19,13 +19,22 @@ is
 
 in this package.
 
-_Note: This is not yet finished. It is capable of loading and displaying images and handling events, but it many things do not have bindings, nor has it been thourouly tested. Expect bugs and missing features._
+_Note: This is not yet finished. It is capable of loading and displaying images and handling events, but many things have not been implemented yet, nor has it been thoroughly tested. Expect bugs and missing features._
 
 Prerequisites
 -------------
 
- * [SDL][sdl] 2 (Still in development as of 2012-08-01.)
+ * [SDL][sdl] 2 (Hasn't been officially released yet as of 2012-08-02.)
  * [Go][golang]
+
+Installation
+------------
+
+ 1. Set up your [GOPATH](http://golang.org/cmd/go/#GOPATH_environment_variable).
+ 2. Run the following command:
+
+> go get github.com/DeedleFake/sdl
 
 [golang]: http://www.golang.org
 [sdl]: http://www.libsdl.org
+[Go-SDL]: https://www.github.com/banthar/Go-SDL
