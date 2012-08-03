@@ -5,8 +5,6 @@ import (
 	"unsafe"
 )
 
-// #cgo pkg-config: sdl2
-//
 // #include <SDL.h>
 //
 // #include "version.h"

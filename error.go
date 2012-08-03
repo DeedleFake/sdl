@@ -4,8 +4,6 @@ import (
 	"errors"
 )
 
-// #cgo pkg-config: sdl2
-//
 // #include <SDL.h>
 import "C"
 
