@@ -27,7 +27,7 @@ func (id TouchID) RecordGesture() error {
 	return nil
 }
 
-func (rw *RWops) SaveAllDollarTemplates() error {
+func SaveAllDollarTemplates(rw *RWops) error {
 	if C.SDL_SaveAllDollarTemplates(rw.c) != 0 {
 		return getError()
 	}
@@ -35,7 +35,7 @@ func (rw *RWops) SaveAllDollarTemplates() error {
 	return nil
 }
 
-func (rw *RWops) SaveDollarTemplate(id GestureID) error {
+func SaveDollarTemplate(rw *RWops, id GestureID) error {
 	if C.SDL_SaveDollarTemplate(id.c(), rw.c) != 0 {
 		return getError()
 	}
@@ -43,7 +43,7 @@ func (rw *RWops) SaveDollarTemplate(id GestureID) error {
 	return nil
 }
 
-func (rw *RWops) LoadDollarTemplates(id TouchID) error {
+func LoadDollarTemplates(rw *RWops, id TouchID) error {
 	if C.SDL_LoadDollarTemplates(id.c(), rw.c) != 0 {
 		return getError()
 	}

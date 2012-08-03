@@ -103,7 +103,7 @@ func (s *Surface) Unlock() {
 	C.SDL_UnlockSurface(s.c())
 }
 
-func (rw *RWops) LoadBMP(free bool) (*Surface, error) {
+func LoadBMP_RW(rw *RWops, free bool) (*Surface, error) {
 	var cfree C.int
 	if free {
 		cfree = 1
@@ -129,7 +129,7 @@ func LoadBMP(file string) (*Surface, error) {
 	return (*Surface)(unsafe.Pointer(s)), nil
 }
 
-func (rw *RWops) SaveBMP(s *Surface, free bool) error {
+func SaveBMP_RW(s *Surface, rw *RWops, free bool) error {
 	var cfree C.int
 	if free {
 		cfree = 1
