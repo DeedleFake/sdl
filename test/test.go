@@ -10,7 +10,7 @@ import (
 
 func LoadTexture(ren *sdl.Renderer, r io.ReadSeeker) (*sdl.Texture, error) {
 	rw := sdl.RWFromReadSeeker(r)
-	bmp, err := rw.LoadBMP(true)
+	bmp, err := sdl.LoadBMP_RW(rw, true)
 	if err != nil {
 		return nil, err
 	}
