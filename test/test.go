@@ -1,28 +1,10 @@
 package main
 
 import (
-	".."
+	"github.com/DeedleFake/sdl"
 	"fmt"
-	"io"
-	"os"
 	"time"
 )
-
-func LoadTexture(ren *sdl.Renderer, r io.ReadSeeker) (*sdl.Texture, error) {
-	rw := sdl.RWFromReadSeeker(r)
-	bmp, err := sdl.LoadBMP_RW(rw, true)
-	if err != nil {
-		return nil, err
-	}
-	defer bmp.Free()
-
-	bmpT, err := ren.CreateTextureFromSurface(bmp)
-	if err != nil {
-		return nil, err
-	}
-
-	return bmpT, nil
-}
 
 func main() {
 	err := sdl.Init(sdl.INIT_EVERYTHING)
@@ -83,13 +65,7 @@ func main() {
 	defer ren.Destroy()
 	ren.SetDrawColor(100, 100, 255, sdl.ALPHA_OPAQUE)
 
-	file, err := os.Open("test.bmp")
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	bmp, err := LoadTexture(ren, file)
+	bmp, err := ren.LoadTexture("test.bmp")
 	if err != nil {
 		panic(err)
 	}
