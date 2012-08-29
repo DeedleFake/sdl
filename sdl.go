@@ -1,6 +1,6 @@
 package sdl
 
-// #cgo pkg-config: sdl2
+// #cgo pkg-config: sdl2 SDL2_image
 //
 // #include <SDL.h>
 import "C"
