@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/DeedleFake/sdl"
 	"fmt"
+	"github.com/DeedleFake/sdl"
+	"github.com/DeedleFake/sdl/img"
 	"time"
 )
 
@@ -65,7 +66,7 @@ func main() {
 	defer ren.Destroy()
 	ren.SetDrawColor(100, 100, 255, sdl.ALPHA_OPAQUE)
 
-	bmp, err := ren.LoadTexture("test.bmp")
+	bmp, err := img.LoadTexture(ren, "test.bmp")
 	if err != nil {
 		panic(err)
 	}
