@@ -5,10 +5,15 @@ import (
 	"unsafe"
 )
 
+// #include <SDL_version.h>
 // #include <SDL_surface.h>
 // #include <SDL_rwops.h>
 // #include <SDL_render.h>
 import "C"
+
+func cVersion(v *sdl.Version) *C.SDL_version {
+	return (*C.SDL_version)(unsafe.Pointer(v))
+}
 
 func cSurface(s *sdl.Surface) *C.SDL_Surface {
 	return (*C.SDL_Surface)(unsafe.Pointer(s))

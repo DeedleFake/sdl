@@ -7,7 +7,47 @@ import (
 
 // #cgo pkg-config: SDL2_image
 // #include <SDL_image.h>
+//
+// #include "image.h"
 import "C"
+
+const (
+	MAJOR_VERSION = C.SDL_IMAGE_MAJOR_VERSION
+	MINOR_VERSION = C.SDL_IMAGE_MINOR_VERSION
+	PATCHLEVEL    = C.SDL_IMAGE_PATCHLEVEL
+)
+
+func VERSION() *sdl.Version {
+	var v sdl.Version
+	C.IMAGE_VERSION(cVersion(&v))
+
+	return &v
+}
+
+func Linked_Version() *sdl.Version {
+	return (*sdl.Version)(unsafe.Pointer(C.IMG_Linked_Version()))
+}
+
+type InitFlags C.IMG_InitFlags
+
+const (
+	INIT_JPG  InitFlags = C.IMG_INIT_JPG
+	INIT_PNG  InitFlags = C.IMG_INIT_PNG
+	INIT_TIF  InitFlags = C.IMG_INIT_TIF
+	INIT_WEBP InitFlags = C.IMG_INIT_WEBP
+)
+
+func Init(flags InitFlags) error {
+	if C.IMG_Init(C.int(flags)) != 0 {
+		return getError()
+	}
+
+	return nil
+}
+
+func Quit() {
+	C.IMG_Quit()
+}
 
 func Load(name string) (*sdl.Surface, error) {
 	cname := C.CString(name)
