@@ -1,36 +1,47 @@
 Go Bindings for SDL 2
 =====================
 
-This [Go][golang] package provides bindings for [SDL][sdl] 2. For bindings for [SDL][sdl] 1 see [banthar's GitHub repo][Go-SDL]. It mostly follows the C API, but removes the 'SDL\_' prefix in the C definitions. Thus, the C function
+This [Go][golang] package provides bindings for [SDL][sdl] 2. For bindings for [SDL][sdl] 1 see [banthar's GitHub repo][Go-SDL].
+
+While the package mostly follows the C API's naming conventions, some changes have been made.
+The 'SDL\_' prefix of the C definitions has been removed. Thus, the C function
 
 > SDL\_CreateWindow()
 
-would be
+is
 
 > sdl.CreateWindow()
 
-in this package. Also, some functions have been changed to methods of related types where it seemed appropriate. Thus, this package's equivalent for
+in this package.
+
+In addition to this, some functions have been changed to be methods of related types where it seemed appropriate. Thus,
 
 > SDL\_CreateRenderer()
 
 is
 
-> (\*Window)CreateRenderer()
+> (\*Window).CreateRenderer()
 
-in this package.
+in this package. Some of these methods' names differ from the originals as well. For example,
+
+> SDL\_SetWindowFullscreen()
+
+has been changed to
+
+> (\*Window).SetFullscreen()
 
 _Note: This is not yet finished. It is capable of loading and displaying images and handling events, but many things have not been implemented yet, nor has it been thoroughly tested. Expect bugs and missing features._
 
 Prerequisites
 -------------
 
- * [SDL][sdl] 2 (Hasn't been officially released yet as of 2012-08-02.)
+ * [SDL][sdl] 2 (Hasn't been officially released yet as of 2013-02-25.)
  * [Go][golang]
 
 Installation
 ------------
 
- 1. Set up your [GOPATH](http://golang.org/cmd/go/#GOPATH_environment_variable).
+ 1. Set up your [GOPATH](http://golang.org/cmd/go/#hdr-GOPATH_environment_variable).
  2. Run the following command:
 
 > go get github.com/DeedleFake/sdl
