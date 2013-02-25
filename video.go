@@ -219,8 +219,8 @@ func GetClosestDisplayMode(i int, m *DisplayMode) (*DisplayMode, error) {
 	return &dm, nil
 }
 
-func (win *Window) GetDisplay() (int, error) {
-	if d := C.SDL_GetWindowDisplay(win.c); d >= 0 {
+func (win *Window) GetDisplayIndex() (int, error) {
+	if d := C.SDL_GetWindowDisplayIndex(win.c); d >= 0 {
 		return int(d), nil
 	}
 
@@ -382,13 +382,8 @@ func (win *Window) Restore() {
 	C.SDL_RestoreWindow(win.c)
 }
 
-func (win *Window) SetFullscreen(fs bool) error {
-	cfs := C.SDL_bool(C.SDL_FALSE)
-	if fs {
-		cfs = C.SDL_TRUE
-	}
-
-	if C.SDL_SetWindowFullscreen(win.c, cfs) != 0 {
+func (win *Window) SetFullscreen(flags WindowFlags) error {
+	if C.SDL_SetWindowFullscreen(win.c, C.Uint32(flags)) != 0 {
 		return getError()
 	}
 

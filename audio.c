@@ -35,7 +35,6 @@ Uint32 AUDIO_ISUNSIGNED(Uint32 x)
 	return SDL_AUDIO_ISUNSIGNED(x);
 }
 
-
 SDL_AudioSpec *LoadWAV(const char *file, SDL_AudioSpec *spec, Uint8 **buf, Uint32 *len)
 {
 	return SDL_LoadWAV(file, spec, buf, len);
