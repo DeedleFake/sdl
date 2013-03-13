@@ -120,7 +120,7 @@ func (c *Color) c() *C.SDL_Color {
 	return (*C.SDL_Color)(unsafe.Pointer(c))
 }
 
-func (c *Color) RGBA() (r, g, b, a uint32) {
+func (c Color) RGBA() (r, g, b, a uint32) {
 	r = uint32(c.R) * 0xFFFF / 255
 	g = uint32(c.G) * 0xFFFF / 255
 	b = uint32(c.B) * 0xFFFF / 255
