@@ -1,4 +1,5 @@
 package sdl
+
 /*
 import (
 	"reflect"
@@ -21,10 +22,11 @@ func (id FingerID) c() C.SDL_FingerID {
 }
 
 type Finger struct {
-	Id                         FingerID
-	X, Y                       float32
-	Pressure                   float32
+	Id       FingerID
+	X, Y     float32
+	Pressure float32
 }
+
 /*
 func (f *Finger) c() *C.SDL_Finger {
 	return (*C.SDL_Finger)(unsafe.Pointer(f))
