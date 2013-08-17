@@ -2,13 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/DeedleFake/sdl"
-	"github.com/DeedleFake/sdl/img"
+	"github.com/salviati/sdl"
+	"github.com/salviati/sdl/img"
+	"runtime"
 	"time"
 )
 
 func main() {
-	err := sdl.Init(sdl.INIT_EVERYTHING)
+	runtime.LockOSThread()
+	err := sdl.Init(sdl.INIT_VIDEO)
 	if err != nil {
 		panic(err)
 	}

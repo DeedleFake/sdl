@@ -17,15 +17,15 @@ type RWops struct {
 }
 
 func (rw *RWops) Seek(offset int64, whence int) (int64, error) {
-	return int64(C.seek(rw.c, C.long(offset), C.int(whence))), nil
+	return int64(C.sdl2_seek(rw.c, C.long(offset), C.int(whence))), nil
 }
 
 func (rw *RWops) Tell() (int64, error) {
-	return int64(C.tell(rw.c)), nil
+	return int64(C.sdl2_tell(rw.c)), nil
 }
 
 func (rw *RWops) Read(data []byte) (int, error) {
-	n := C.read(rw.c, unsafe.Pointer(&data[0]), 1, C.size_t(len(data)))
+	n := C.sdl2_read(rw.c, unsafe.Pointer(&data[0]), 1, C.size_t(len(data)))
 	switch {
 	case n == 0:
 		return 0, io.EOF
@@ -37,7 +37,7 @@ func (rw *RWops) Read(data []byte) (int, error) {
 }
 
 func (rw *RWops) Write(data []byte) (int, error) {
-	n := C.write(rw.c, unsafe.Pointer(&data[0]), 1, C.size_t(len(data)))
+	n := C.sdl2_write(rw.c, unsafe.Pointer(&data[0]), 1, C.size_t(len(data)))
 	switch {
 	case n == 0:
 		return 0, io.EOF
@@ -49,7 +49,7 @@ func (rw *RWops) Write(data []byte) (int, error) {
 }
 
 func (rw *RWops) Close() error {
-	if C.close(rw.c) != 0 {
+	if C.sdl2_close(rw.c) != 0 {
 		return getError()
 	}
 
