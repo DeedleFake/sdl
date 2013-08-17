@@ -1,9 +1,10 @@
 package sdl
 
+/*
 import (
 	"reflect"
 	"unsafe"
-)
+)*/
 
 // #include <SDL.h>
 import "C"
@@ -21,14 +22,12 @@ func (id FingerID) c() C.SDL_FingerID {
 }
 
 type Finger struct {
-	Id                         FingerID
-	X, Y                       uint16
-	Pressure                   uint16
-	Xdelta, Ydelta             uint16
-	LastX, LastY, LastPressure uint16
-	down                       C.SDL_bool
+	Id       FingerID
+	X, Y     float32
+	Pressure float32
 }
 
+/*
 func (f *Finger) c() *C.SDL_Finger {
 	return (*C.SDL_Finger)(unsafe.Pointer(f))
 }
@@ -87,10 +86,10 @@ func (t *Touch) Fingers() []*Finger {
 	}))
 }
 
-func (t TouchID) GetTouch() *Touch {
-	return (*Touch)(unsafe.Pointer(C.SDL_GetTouch(t.c())))
+func (t TouchID) GetTouchDevice() TouchID {
+	return (*Touch)(unsafe.Pointer(C.SDL_GetTouchDevice(t.c())))
 }
 
-func (t *Touch) GetFinger(f FingerID) *Finger {
-	return (*Finger)(unsafe.Pointer(C.SDL_GetFinger(t.c(), f.c())))
-}
+func (t *Touch) GetFingerDevice(f FingerID) *Finger {
+	return (*Finger)(unsafe.Pointer(C.SDL_GetFingerDevice(t.c(), f.c())))
+}*/
