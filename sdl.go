@@ -5,8 +5,6 @@ package sdl
 // #include <SDL.h>
 import "C"
 
-import "log"
-
 const (
 	INIT_TIMER       = C.SDL_INIT_TIMER
 	INIT_AUDIO       = C.SDL_INIT_AUDIO
@@ -20,10 +18,7 @@ const (
 )
 
 func Init(flags uint32) error {
-	log.Println(flags)
-	cflags := C.Uint32(flags)
-	ret := C.SDL_Init(cflags)
-	if ret != 0 {
+	if C.SDL_Init(C.Uint32(flags)) != 0 {
 		return getError()
 	}
 
