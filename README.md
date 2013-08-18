@@ -30,12 +30,14 @@ has been changed to
 
 > (\*Window).SetFullscreen()
 
+For a full API reference, see [godoc.org][godoc].
+
 _Note: This is not yet finished. It is capable of loading and displaying images and handling events, but many things have not been implemented yet, nor has it been thoroughly tested. Expect bugs and missing features._
 
 Prerequisites
 -------------
 
- * [SDL][sdl] 2 (Hasn't been officially released yet as of 2013-02-25.)
+ * [SDL][sdl] 2
  * [Go][golang]
 
 Installation
@@ -49,3 +51,4 @@ Installation
 [golang]: http://www.golang.org
 [sdl]: http://www.libsdl.org
 [Go-SDL]: https://www.github.com/banthar/Go-SDL
+[godoc]: http://www.godoc.org/github.com/DeedleFake/sdl
